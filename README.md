@@ -14,6 +14,24 @@ Most system design resources target senior engineers preparing for staff-level i
 
 It was created by a mentor for young aspiring software engineers, and co-authored with AI.
 
+## Philosophy
+
+> **"How much do I need to learn?"** is the wrong question. Ask instead: **"How deeply do I understand what I've learned?"**
+
+The biggest trap in studying system design is **the illusion of depth.** You read about database indexing and think *"Got it — there's a thing called an index, it makes lookups faster."* That's the surface. In an interview, someone will ask: *"Why does indexing make reads faster but writes slower? When would you NOT add an index?"* And you'll freeze.
+
+**This curriculum is designed for multiple passes:**
+
+| Pass | How | Goal |
+|---|---|---|
+| **1st** | Listen (NotebookLM audio) | Learn the vocabulary |
+| **2nd** | Read + build (AI assistant) | Understand the *why* |
+| **3rd** | Teach (explain out loud) | Prove you truly get it |
+
+Each pass takes you deeper. Like reading philosophy — read Aristotle once and you get the basics. Read him every year and you discover new layers each time.
+
+**The Surgery Rule:** You'll use AI to write code in the exercises. That's good — it lets you focus on concepts. But you cannot watch like a movie. The AI writes; you must understand **every line.** Because soon someone will say *"Design Twitter"* — and the AI won't be in the interview room with you.
+
 ## Who Is This For?
 
 - CS students who can write code but have never deployed anything

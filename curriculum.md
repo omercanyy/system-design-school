@@ -41,6 +41,8 @@ flowchart LR
     E --> F[Short Code: 2Bi]
 ```
 
+> 🤔 **Think about:** We chose a counter for TinyURL. But what if you're generating promo codes that customers shouldn't be able to guess? Would a sequential counter still work?
+
 **What students should be able to say:** *"We use a Base62 counter for short codes because it guarantees uniqueness without having to scan past records for collisions."*
 
 ---
@@ -59,6 +61,8 @@ flowchart LR
 **Decision:** We pick **The Cloud**. Someone already built the data centers. We just want to rent the exact amount of computing power we need. Think of it like renting an apartment versus building a house from scratch. We will use AWS (Amazon Web Services) because it's the most popular, but these concepts apply to Google Cloud or Microsoft Azure just as well. 
 
 **When alternatives work:** Huge companies with very specific, massive workloads (like Dropbox) sometimes move off the cloud to their own data centers to save money at an extreme scale. But for almost everyone else, the cloud is the answer.
+
+> 🤔 **Think about:** We picked the cloud. But Dropbox famously moved OFF AWS to their own servers. What scale would justify that cost?
 
 **What students should be able to say:** *"The cloud is just renting computing resources from someone else's data center so we don't have to buy and maintain physical servers."*
 
@@ -93,6 +97,8 @@ flowchart LR
     B --> C[Short Code]
 ```
 
+> 🤔 **Think about:** We picked Lambda. But if you were training an AI model that takes 4 hours and needs a GPU, Lambda can't do it. What would you use?
+
 **What students should be able to say:** *"We use serverless compute like AWS Lambda so we only pay when our code runs and don't have to manage the underlying operating system."*
 
 ---
@@ -113,6 +119,8 @@ Yes! Engineers use standard diagramming languages, often inspired by UML (Unifie
 **Decision:** We'll use a mix of Architecture and Sequence diagrams to document TinyURL, using a tool called Mermaid so we can write our diagrams as code.
 
 From now on, every time we add a piece to our system, we'll update the architecture diagram.
+
+> 🤔 **Think about:** Next time you read a tech blog post from Netflix or Uber, look at their diagrams. Can you identify which type (sequence, architecture, C4) they're using?
 
 **What students should be able to say:** *"We use standard diagrams like sequence and architecture flows so other engineers can understand our system without reading the code."*
 
@@ -164,6 +172,8 @@ sequenceDiagram
     DynamoDB-->>Lambda: Saved!
     Lambda-->>User: Here is your short code (abc123)
 ```
+
+> 🤔 **Think about:** We chose DynamoDB. But what if you were building a banking app with transfers between accounts that must succeed or fail together? Would DynamoDB handle that?
 
 **What students should be able to say:** *"We chose a NoSQL key-value store because our access pattern is a simple, direct lookup by short code, and we don't need complex relational joins."*
 
@@ -229,6 +239,8 @@ sequenceDiagram
     Browser->>Browser: Automatically goes to example.com
 ```
 
+> 🤔 **Think about:** Our POST /shorten creates a new short URL every time. Should posting the same long URL twice return the same short code, or a different one? What are the trade-offs?
+
 **What students should be able to say:** *"We expose our system through a REST API using HTTP methods, where POST creates new short links and GET retrieves them."*
 
 ---
@@ -263,6 +275,8 @@ flowchart TD
 
 **When alternatives work:** If you are just doing a 5-minute prototype to see if a cloud service even does what you want, click around in the console. Once you decide to keep it, write the IaC.
 
+> 🤔 **Think about:** Every new developer gets their own stack from the same IaC script. What happens when Developer A changes the script and Developer B's stack is now outdated?
+
 **What students should be able to say:** *"We use Infrastructure as Code so our deployments are repeatable, version-controlled, and easy to spin up for new developers."*
 
 ---
@@ -294,6 +308,8 @@ flowchart LR
 ```
 
 **When alternatives work:** Never. You should always have some form of automated deployment, even for personal projects.
+
+> 🤔 **Think about:** What if your tests take 45 minutes to run and developers merge 20 PRs a day? How does slow CI affect your team's velocity?
 
 **What students should be able to say:** *"We use a CI/CD pipeline to automate testing and safely deploy code through staging environments before hitting production."*
 
@@ -336,6 +352,8 @@ flowchart LR
     end
 ```
 
+> 🤔 **Think about:** At 1,000 concurrent Lambda invocations, each opens its own database connection. Is 1,000 simultaneous database connections a problem? What could you do about it?
+
 **What students should be able to say:** *"Vertical scaling means adding more power to an existing machine, which is easy but eventually hits a hard hardware limit."*
 
 ---
@@ -376,6 +394,8 @@ flowchart TD
 
 **When alternatives work:** If you have a system with huge, complex computations that can't be easily split across machines (like rendering a massive 3D scene), you might be forced to vertically scale as far as possible.
 
+> 🤔 **Think about:** TinyURL is read-heavy. But Uber during rush hour has drivers constantly updating their locations (write-heavy). Would read replicas help Uber the same way?
+
 **What students should be able to say:** *"We use horizontal scaling by adding read replicas to handle massive read traffic without hitting hardware limits."*
 
 ---
@@ -411,6 +431,8 @@ flowchart TD
 ```
 
 **When alternatives work:** If you only serve local businesses in one city, deploying globally is a waste of money. Stick to one region.
+
+> 🤔 **Think about:** A user sets up a VPN to the US but is physically in Japan. Route 53 sees a US IP. Which stack serves them? Is this a problem?
 
 **What students should be able to say:** *"We use DNS geo-routing to direct users to the physical server closest to them, reducing latency."*
 
@@ -451,6 +473,8 @@ flowchart TD
 
 **When alternatives work:** If your data is small or naturally deletes itself (like ephemeral chat messages), you never need to shard or archive.
 
+> 🤔 **Think about:** WhatsApp stores billions of messages. How would you shard the messages table — by user ID, by date, or by conversation ID? Each choice has very different trade-offs.
+
 **What students should be able to say:** *"To manage infinite data growth, we archive stale data to cheap cold storage and rely on database sharding to distribute active data across multiple servers."*
 
 ---
@@ -489,6 +513,8 @@ flowchart TD
 
 **When alternatives work:** Write-through is great for banking systems where you absolutely cannot afford for the cache to have stale data for even a second.
 
+> 🤔 **Think about:** Would you cache Uber driver locations? They change every few seconds. What caching strategy works when data changes faster than your TTL?
+
 **What students should be able to say:** *"We use an in-memory cache like Redis with a Cache-Aside pattern to serve highly requested viral URLs instantly without overloading the database."*
 
 ---
@@ -524,6 +550,8 @@ flowchart LR
 
 **When alternatives work:** If a user is buying an item, the payment MUST be synchronous. You can't say "Okay, we'll process your credit card in the background, hope it works!"
 
+> 🤔 **Think about:** When you order on Amazon, you get a confirmation instantly but the warehouse ships hours later. What queue sits between the order confirmation and the warehouse?
+
 **What students should be able to say:** *"We use message queues for asynchronous processing so we can do heavy background work like analytics without slowing down the user's request."*
 
 ---
@@ -556,6 +584,8 @@ If the network is down:
 **Decision:** TinyURL chooses **Availability (AP)**. A brief 404 for a brand new cross-continent URL is acceptable. We'd rather serve an answer than crash. It will eventually be consistent a few seconds later.
 
 **When alternatives work:** A bank uses Consistency (CP). You would much rather see an error message than see your bank account balance randomly show $0 because of stale data.
+
+> 🤔 **Think about:** Is your bank account balance eventually consistent or strongly consistent? What about Instagram likes? How can you tell just by using the product?
 
 **What students should be able to say:** *"Due to the CAP theorem, our distributed system prioritizes Availability over strict Consistency, meaning users might briefly see eventual consistency delays."*
 
@@ -594,6 +624,8 @@ flowchart TD
 ```
 
 **When alternatives work:** If we were tracking exact financial ledgers instead of casual view counts, we would use a relational database with strict ACID transactions.
+
+> 🤔 **Think about:** YouTube shows view counts with a delay. Twitter shows like counts that sometimes go up and down. Are these bugs, or is this eventual consistency in action?
 
 **What students should be able to say:** *"We use atomic operations to prevent race conditions during write-heavy analytics tracking, and store the data in a document database optimized for aggregations."*
 
@@ -636,6 +668,8 @@ flowchart TD
     User -->|Send JWT + Request| B(API Gateway)
     B -->|Verifies JWT| C(Lambda)
 ```
+
+> 🤔 **Think about:** How does 'Login with Google' work on a third-party app? Does the app ever see your Google password? What's actually happening under the hood?
 
 **What students should be able to say:** *"We use salted hashing to safely store passwords, and rely on database unique constraints as a mutex to prevent race conditions on custom URL claims."*
 
@@ -685,6 +719,8 @@ flowchart TD
 ```
 
 **When alternatives work:** If you are a single dev working on a weekend project, just push to prod instantly. Don't overengineer.
+
+> 🤔 **Think about:** A/B testing shows the new UI increases watch time by 4% but decreases ad clicks by 2%. Do you ship it? Who makes that call — engineering or product?
 
 **What students should be able to say:** *"We use canary deployments and feature flags to safely roll out changes, minimizing the impact of potential bugs on our global user base."*
 
@@ -744,6 +780,8 @@ sequenceDiagram
     Notif-->>User: "Your video is ready to watch!"
 ```
 
+> 🤔 **Think about:** Spotify processes uploaded podcasts too — noise reduction, normalization, multi-bitrate encoding. How similar is their pipeline to YouTube's?
+
 **What students should be able to say:** *I understand that long-running tasks like video transcoding must be decoupled from the web request using message queues to keep the system responsive.*
 
 ---
@@ -796,6 +834,8 @@ flowchart TD
     msg --> Container
     Container --> S3[(Processed Videos)]
 ```
+
+> 🤔 **Think about:** Your Docker image is 2GB and takes 10 minutes to deploy. How would you reduce the image size? (Hint: multi-stage builds, Alpine base images.)
 
 **What students should be able to say:** *Containers package my application and all its dependencies into a single runnable unit, solving the 'works on my machine' problem and allowing long-running tasks that serverless functions can't handle.*
 
@@ -852,6 +892,8 @@ flowchart TD
     SQS --> Pod2
     SQS --> Pod3
 ```
+
+> 🤔 **Think about:** AWS Fargate handles container scaling automatically — like Lambda for containers. When would you still choose the complexity of Kubernetes over Fargate?
 
 **What students should be able to say:** *Kubernetes is an orchestration tool that automates the deployment, scaling, and self-healing of containerized applications.*
 
@@ -916,6 +958,8 @@ flowchart LR
     Mutex --> Shared
 ```
 
+> 🤔 **Think about:** Node.js is single-threaded but handles thousands of concurrent connections. How is that possible if it only has one thread? (Hint: event loop, async I/O.)
+
 **What students should be able to say:** *Threads allow a process to perform multiple tasks in parallel on multi-core CPUs, but shared memory requires synchronization mechanisms like mutexes to prevent race conditions.*
 
 ---
@@ -967,6 +1011,8 @@ flowchart TD
     ALB --> S3
 ```
 
+> 🤔 **Think about:** You're load balancing WebSocket connections. Round robin assigns connections at connect time, but some connections last 2 hours while others last 5 seconds. Is the load really balanced?
+
 **What students should be able to say:** *A load balancer distributes incoming network traffic across multiple servers to ensure high availability and reliability, while CDNs handle the bulk of static content delivery.*
 
 ---
@@ -1016,6 +1062,8 @@ flowchart LR
     Transcode -- "gRPC (Protobuf)" --> Notif
 ```
 
+> 🤔 **Think about:** Why does the YouTube mobile app use REST to talk to YouTube's backend, but YouTube's internal services talk to each other with gRPC? What would happen if they used gRPC for the mobile app too?
+
 **What students should be able to say:** *Microservices use fast, binary protocols like gRPC for strict, high-performance internal communication, while exposing user-friendly REST APIs to the public web.*
 
 ---
@@ -1056,6 +1104,8 @@ sequenceDiagram
     Viewer->>Server: Send: "This stream is great!"
     Server->>Viewer: Push: "User C: Agreed!"
 ```
+
+> 🤔 **Think about:** Slack shows a typing indicator when someone is typing a message. Is that REST polling or WebSockets? What about Gmail — how does it know you have new email?
 
 **What students should be able to say:** *WebSockets provide a persistent, bidirectional connection between client and server, enabling real-time features like live chat without the overhead of HTTP polling.*
 
@@ -1102,6 +1152,8 @@ classDiagram
     VideoEncoder <|.. VP9Encoder
 ```
 
+> 🤔 **Think about:** You have 3 payment providers (Stripe, PayPal, Square). Which design pattern would let you swap between them without changing your business logic?
+
 **What students should be able to say:** *Design patterns like Factory and Strategy decouple my application logic, making it easier to add new features without modifying existing, tested code.*
 
 ---
@@ -1144,6 +1196,8 @@ flowchart LR
     Router -->|5%| V2
 ```
 
+> 🤔 **Think about:** You ship a feature flag to 100% of users and want to remove the old code path. How long do you wait before deleting it? What if you delete it too early?
+
 **What students should be able to say:** *Techniques like canary deployments and feature flags minimize the risk of shipping new code by exposing changes to a small subset of users before a full release.*
 
 ---
@@ -1172,6 +1226,8 @@ Instead, use a **heuristic** — a "good enough" approximation. Google Maps does
 "Can every problem that's easy to verify also be solved efficiently?" Nobody knows. It is the biggest open question in computer science. If P = NP, modern encryption breaks overnight. Most computer scientists assume P ≠ NP.
 
 (Search YouTube for "P vs NP explained" for a great visual breakdown!)
+
+> 🤔 **Think about:** Your PM says 'just throw more servers at it' to solve a slow algorithm. Can parallelism solve an NP-Hard problem? Why or why not?
 
 **What students should be able to say:** *Recognizing an NP-Hard problem is a vital engineering skill, as it tells me to stop looking for a perfect solution and start writing a fast heuristic approximation instead.*
 
